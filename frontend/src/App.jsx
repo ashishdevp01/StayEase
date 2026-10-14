@@ -19,7 +19,8 @@ import AllRoom from "./pages/owner/AllRoom";
 import AddRoom from "./pages/owner/AddRoom";
 import Bookings from "./pages/owner/Bookings";
 import { useContext } from "react";
-import Loader from "./components/loader";
+import Loader from "./components/Loader";
+
 
 const App = () => {
   const ownerPath = useLocation().pathname.includes("owner");

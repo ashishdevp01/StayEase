@@ -12,7 +12,7 @@ const  bookingRouter = require("./routes/booking.route.js");
 
 
 const app = express();
-
+app.set('trust proxy', 1);
 connectDB();
 
 app.use(express.json());

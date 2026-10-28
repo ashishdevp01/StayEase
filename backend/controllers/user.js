@@ -13,7 +13,7 @@ const signup = async(req, res) => {
 
         const user = await User.findOne({email});
         if(user) {
-            res.json({ message: "user already exists", success:  false });
+           return  res.json({ message: "user already exists", success:  false });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User({
@@ -55,6 +55,8 @@ const login = async (req, res) => {
         );
         res.cookie("token", token, {
            httpOnly: true,
+           secure: true,      // Required for HTTPS on Render
+           sameSite: "none",
            maxAge: 24 * 60 * 60 * 1000, 
         });
         return res.json({message: "login successfully", success: true, user});
@@ -66,13 +68,17 @@ const login = async (req, res) => {
       // logout
 
     const logout = async (req, res)=> {
-        try {
-            res.clearCookie("token");
-            return res.json({success: "logout successfully", message: true});
-        } catch (error) {
-            return res.json({ message: "internal server error", success: false});
-        }
-    };
+    try {
+        // MATCH the same options when clearing cross-site cookies:
+        res.clearCookie("token", {
+            secure: true,
+            sameSite: "none"
+        });
+        return res.json({success: "logout successfully", message: true});
+    } catch (error) {
+        return res.json({ message: "internal server error", success: false});
+    }
+};
 
 
     // isAuth middleware
